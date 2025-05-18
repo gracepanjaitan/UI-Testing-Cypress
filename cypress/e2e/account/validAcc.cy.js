@@ -14,7 +14,7 @@ describe("Leave Management", async function () {
       cy.get(':nth-child(1) > .oxd-input-group > :nth-child(2) > .oxd-select-wrapper > .oxd-select-text').click()
       cy.contains('ESS').click()
       cy.get('.oxd-autocomplete-text-input > input').type(employeeName);
-      cy.contains('.oxd-autocomplete-option', employeeName).click();
+      cy.contains('.oxd-autocomplete-option', employeeName, {timeout: 5000}).click();
       cy.get(':nth-child(3) > .oxd-input-group > :nth-child(2) > .oxd-select-wrapper > .oxd-select-text').click()
       cy.contains('Enabled').click()
       cy.get(':nth-child(4) > .oxd-input-group > :nth-child(2) > .oxd-input', {timeout: 5000}).type(username)

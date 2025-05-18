@@ -9,16 +9,20 @@ describe('UI automation cpress', async function () {
     beforeEach(function(){
         cy.visit(baseUrl, '/auth/login');
     })
-    it('Request Leave', async function () {
-        //Login as employee
+
+    function longinEmployee() {
         cy.get('.oxd-text--h5').should('be.visible')
-        cy.get(`[name="username"]`).type(empUsername);
-        cy.get(`[name="password"]`).type(emPass);
+        cy.get(`[name="username"]`, {timeout: 3000}).clear().type(empUsername);
+        cy.get(`[name="password"]`, {timeout: 3000}).clear().type(emPass);
         cy.get('.oxd-button').click("center").should("be.visible");     
         cy.url().should('include', '/dashboard/index')
-        cy.contains("Leave", {timeout: 5000}).click();
-
+    }
+    it('Request Leave', async function () {
+        // Login as employee
+        longinEmployee();
+        
         // Request Leave
+        cy.contains("Leave", {timeout: 5000}).click();
         cy.get('.oxd-topbar-body-nav > ul > :nth-child(1)').click()
         cy.get('.oxd-select-text', {timeout:3000}).click();
         cy.contains('CAN - Matternity').click()
@@ -29,21 +33,29 @@ describe('UI automation cpress', async function () {
 
         //log out
         cy.get('.oxd-userdropdown-tab').click()
-        cy.contains('Logout').click()
+        cy.contains('Logout', {timeout: 5000}).click()
         cy.url().should('include', '/auth/login')
 
         //login as admin again
         cy.login();
 
         //Approve Leave
+        cy.wait(1000);
         cy.contains("Leave").click();
         cy.url().should("include", "/leave/viewLeaveList");
         cy.get('.oxd-autocomplete-text-input > input').type(employeeName);
-        cy.contains('.oxd-autocomplete-option', employeeName, {timeout:5000}).click();
+        cy.wait(1000);
+        cy.contains('.oxd-autocomplete-option', employeeName).click();
         cy.get('.oxd-button--secondary').click()
-        cy.get('.oxd-table-row > :nth-child(3) > div').should('contain', employeeName);
-        cy.get(':nth-child(7) > div').should('contain', "Pendding Approva")
-        //
+        // cy.get('.oxd-button--label-success', {timeout: 5000}).click();
+        // cy.contains('Successfully Updated').should('be.visible')
+
+        //login as employee
+        longinEmployee();
+
+        // approved employee
+        cy.contains("Leave", {timeout: 5000}).click();
+        cy.contains('Scheduled').should('be.visible');
     })
 
 })

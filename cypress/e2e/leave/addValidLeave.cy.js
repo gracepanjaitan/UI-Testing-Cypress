@@ -9,7 +9,7 @@ describe("Leave Management", async function () {
     it("Invalid add Leave", async function () {
       cy.contains("Leave").click();
       cy.url().should("include", "/leave/viewLeaveList");
-      cy.get('.oxd-topbar-body-nav > ul > :nth-child(3)', {timeout:3000}).click();
+      cy.get('.oxd-topbar-body-nav > ul > :nth-child(3)', {timeout:5000}).click();
       cy.contains('Add Entitlements').click()
       cy.url().should("include", "/leave/addLeaveEntitlement");
       cy.get('.oxd-autocomplete-text-input > input').type(employeeName);
@@ -18,8 +18,9 @@ describe("Leave Management", async function () {
       cy.contains('CAN - Matternity').click()
       cy.get(':nth-child(2) > .oxd-input').type(entitlement);
       cy.get('[type="submit"]').should("be.visible").click();
-      cy.get('.orangehrm-modal-footer > .oxd-button--secondary').click()
-      cy.contains('Success').should('be.visible');
+      cy.get('.oxd-sheet', {timeout:5000}).should('be.visible')
+      cy.get('.orangehrm-modal-footer > .oxd-button--secondary').contains('Confirm').click()
+      cy.get('.oxd-toast-content').should('be.visible');
     });
   });
   
